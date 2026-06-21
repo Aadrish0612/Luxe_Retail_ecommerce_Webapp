@@ -1,44 +1,55 @@
-# 🧪 Luxe Liquid: Elegant Auto-Suggestion Search
+# Luxe Liquid: Elegant Auto-Suggestion Search
 
 An elegant, high-end e-commerce interface with an advanced, debounced **Auto-Suggestion Search** system. Designed with a luxury visual identity ("Luxe Liquid") featuring ambient glow filters, liquid glassmorphism, responsive grids, and an interactive shopping bag checkout experience.
 
 ---
 
-## 📸 Visual Previews
+## Visual Previews
 
 Here you can showcase the elegant user interface of Luxe Liquid. Replace the placeholder links below with your screenshots.
 
-### 🔍 Search & Auto-Suggestions
+### Search & Auto-Suggestions
 *Experience real-time debounced results as you type with the luxury glassmorphic dropdown.*
-```
-[Insert Search and Dropdown Screenshot here, e.g. ./docs/screenshots/search-dropdown.png]
-```
-<!-- Place your image here: -->
-<!-- ![Search & Auto-Suggestions](./docs/screenshots/search-dropdown.png) -->
 
----
+![Search & Auto-Suggestions](./src/assets/screenshots/Search.png) 
 
-### 🛍️ Product Catalog & Liquid Glass Navbar
+
+
+### Product Catalog & Liquid Glass Navbar
 *Browse through premium collections (Tech, Makeup, Groceries) styled with custom hover effects.*
-```
-[Insert Homepage & Product Catalog Screenshot here, e.g. ./docs/screenshots/homepage.png]
-```
-<!-- Place your image here: -->
-<!-- ![Homepage & Product Catalog](./docs/screenshots/homepage.png) -->
 
----
 
-### 💼 Shopping Bag Drawer
+ ![Homepage & Product Catalog](src/assets/screenshots/Curated.png)
+
+
+
+### Shopping Bag Drawer
 *Manage your selected items, increment/decrement quantities, and check the real-time subtotal in the sliding side-drawer.*
-```
-[Insert Shopping Bag Drawer Screenshot here, e.g. ./docs/screenshots/shopping-bag.png]
-```
-<!-- Place your image here: -->
-<!-- ![Shopping Bag Drawer](./docs/screenshots/shopping-bag.png) -->
 
----
+*First- Without any items*
+![Shopping Bag Drawer](.src/assets/screenshots/Bag_no_item.png) 
 
-## ✨ Features
+*Next- With an item*
+![Shopping Bag Drawer](.src/assets/screenshots/bag_single_item.png) 
+
+*Next- With multiple items*
+![Shopping Bag Drawer](.src/assets/screenshots/bag_multiple_item.png) 
+
+### Editorial Section
+*Reviews left by prominent customers.*
+![Shopping Bag Drawer](.src/assets/screenshots/editorial.png) 
+
+### Collections
+*Items categorised into various collections*
+
+**Tech Cxollection**
+![Shopping Bag Drawer](.src/assets/screenshots/collection_tech.png)
+
+**Groceries collection**
+![Shopping Bag Drawer](.src/assets/screenshots/collection_groceries.png) 
+
+
+## Features
 
 - **Debounced Auto-Suggestion**: Searches the `dummyjson.com` product API with a 400ms debounce to limit network requests.
 - **Glassmorphic Navigation Bar**: Implements a sticky nav with background blur (`backdrop-filter`) and gold hover effects.
@@ -49,7 +60,7 @@ Here you can showcase the elegant user interface of Luxe Liquid. Replace the pla
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework**: React 19 + Vite 8 (with React Compiler enabled for optimal rendering performance)
 - **Styling**: Vanilla CSS (variables, glassmorphic styles, custom utility classes)
@@ -57,7 +68,7 @@ Here you can showcase the elegant user interface of Luxe Liquid. Replace the pla
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 Follow these steps to run the application locally:
 
