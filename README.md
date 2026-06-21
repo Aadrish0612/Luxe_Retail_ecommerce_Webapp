@@ -19,7 +19,7 @@ Here you can showcase the elegant user interface of Luxe Liquid. Replace the pla
 *Browse through premium collections (Tech, Makeup, Groceries) styled with custom hover effects.*
 
 
- ![Homepage & Product Catalog](src/assets/screenshots/Curated.png)
+ ![Homepage & Product Catalog](./src/assets/screenshots/Curated.png)
 
 
 
@@ -27,26 +27,26 @@ Here you can showcase the elegant user interface of Luxe Liquid. Replace the pla
 *Manage your selected items, increment/decrement quantities, and check the real-time subtotal in the sliding side-drawer.*
 
 *First- Without any items*
-![Shopping Bag Drawer](.src/assets/screenshots/Bag_no_item.png) 
+![Shopping Bag Drawer1](./src/assets/screenshots/Bag_no_item.png) 
 
 *Next- With an item*
-![Shopping Bag Drawer](.src/assets/screenshots/bag_single_item.png) 
+![Shopping Bag Drawer2](./src/assets/screenshots/bag_single_item.png) 
 
 *Next- With multiple items*
-![Shopping Bag Drawer](.src/assets/screenshots/bag_multiple_item.png) 
+![Shopping Bag Drawer3](./src/assets/screenshots/bag_multiple_item.png) 
 
 ### Editorial Section
 *Reviews left by prominent customers.*
-![Shopping Bag Drawer](.src/assets/screenshots/editorial.png) 
+![Editorial](./src/assets/screenshots/editorial.png) 
 
 ### Collections
 *Items categorised into various collections*
 
-**Tech Cxollection**
-![Shopping Bag Drawer](.src/assets/screenshots/collection_tech.png)
+**Tech Collection**
+![Tech](./src/assets/screenshots/collection_tech.png)
 
 **Groceries collection**
-![Shopping Bag Drawer](.src/assets/screenshots/collection_groceries.png) 
+![Groceries](./src/assets/screenshots/collection_groceries.png) 
 
 
 ## Features
