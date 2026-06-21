@@ -46,7 +46,7 @@ Here you can showcase the elegant user interface of Luxe Liquid. Replace the pla
 ![Tech](./src/assets/screenshots/collection_tech.png)
 
 **Groceries collection**
-![Groceries](./src/assets/screenshots/collection_groceries.png) 
+![Groceries](./src/assets/screenshots/colection_groceries.png) 
 
 
 ## Features
