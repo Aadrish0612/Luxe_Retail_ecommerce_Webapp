@@ -113,3 +113,8 @@ Auto-suggestion-search/
 ├── package.json                # Project dependencies and scripts
 └── README.md                   # Project documentation
 ```
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
