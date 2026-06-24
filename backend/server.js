@@ -1,3 +1,4 @@
+/* global process */
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import cors from 'cors';
@@ -144,7 +145,7 @@ app.get('/api/products/category/:category', async (req, res) => {
       // Handle custom collections logic on backend to match front-end:
       // 'tech' maps to laptops/smartphones, 'makeup' maps to beauty/fragrances, etc.
       if (categoryName === 'laptops') {
-        return ['smartphones', 'laptops', 'tablets', 'mobile-accessories', 'electronics', 'laptops-and-computers'].includes(cat);
+        return ['smartphones', 'laptops', 'tablets', 'mobile-accessories', 'electronics', 'laptops-and-computers', 'tech'].includes(cat);
       }
       if (categoryName === 'beauty') {
         return ['beauty', 'fragrances', 'skin-care', 'cosmetics', 'face-cream'].includes(cat);
@@ -422,7 +423,7 @@ app.get('/api/auth/verify', async (req, res) => {
         role: decoded.role
       }
     });
-  } catch (err) {
+  } catch {
     res.status(401).json({ error: 'Invalid or expired token' });
   }
 });

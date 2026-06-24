@@ -1,4 +1,3 @@
-import React from 'react';
 import AutoSuggestion from './components/AutoSuggestion';
 import "./App.css";
 

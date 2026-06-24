@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useRef, useState } from 'react';
 
 async function fetchProducts(query) {
     const url = query.trim().length > 0 
@@ -12,7 +13,7 @@ async function fetchProducts(query) {
 const AutoSuggestion = () => {
     // Authentication States
     const [currentUser, setCurrentUser] = useState(null);
-    const [authLoading, setAuthLoading] = useState(true);
+    const [authLoading, setAuthLoading] = useState(() => !!localStorage.getItem('luxe_liquid_token'));
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
     const [loginRole, setLoginRole] = useState("user");
@@ -121,8 +122,6 @@ const AutoSuggestion = () => {
             .finally(() => {
                 setAuthLoading(false);
             });
-        } else {
-            setAuthLoading(false);
         }
     }, []);
 
@@ -342,6 +341,7 @@ const AutoSuggestion = () => {
                 loadPressQuotes();
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [view, adminTab]);
 
     const handleOpenEdit = (p) => {
@@ -615,7 +615,7 @@ const AutoSuggestion = () => {
     // Helper to categorize products under Tech, Makeup, or Groceries
     const getProductCollection = (product) => {
         const cat = (product.category || "").toLowerCase();
-        if (['smartphones', 'laptops', 'tablets', 'mobile-accessories', 'electronics', 'laptops-and-computers'].includes(cat)) {
+        if (['smartphones', 'laptops', 'tablets', 'mobile-accessories', 'electronics', 'laptops-and-computers', 'tech'].includes(cat)) {
             return 'tech';
         }
         if (['beauty', 'fragrances', 'skin-care', 'cosmetics', 'face-cream'].includes(cat)) {
