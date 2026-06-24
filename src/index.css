@@ -48,36 +48,36 @@
 
 :root {
   /* Brand Colors */
-  --primary-gold: #d4af37;
-  --primary-gold-rgb: 212, 175, 55;
+  --primary-gold: #8a526d;              /* Mauve lettering */
+  --primary-gold-rgb: 138, 82, 109;
   --secondary-emerald: #0f742f;
   --secondary-emerald-rgb: 15, 116, 47;
-  --surface-burgundy: #a12134;          /* Deepened by 30% absolute (HSL L: 68% -> 38%) */
-  --surface-burgundy-rgb: 161, 33, 52;
-  --surface-burgundy-light: #bc3448;    /* Deepened by 30% absolute (HSL L: 77% -> 47%) */
+  --surface-burgundy: #f07183;          /* Lightened back to 68-70% lightness */
+  --surface-burgundy-rgb: 240, 113, 131;
+  --surface-burgundy-light: #f4abb5;    /* Lightened back to 77% lightness */
 
   /* Theme Tokens */
   --color-surface: var(--surface-burgundy-light);
-  --color-surface-dim: #8e1a2c;         /* Deepened by 30% absolute (HSL L: 63% -> 33%) */
-  --color-surface-bright: #b83246;      /* Deepened by 30% absolute (HSL L: 76% -> 46%) */
-  --color-surface-container-lowest: #7e101f; /* Deepened by 30% absolute (HSL L: 58% -> 28%) */
-  --color-surface-container-low: #a9283b;    /* Deepened by 30% absolute (HSL L: 71% -> 41%) */
-  --color-surface-container: #bc3448;
-  --color-surface-container-high: #c33c50;   /* Deepened by 30% absolute (HSL L: 80% -> 50%) */
-  --color-surface-container-highest: #c45465;/* Deepened by 30% absolute (HSL L: 85% -> 55%) */
-  --color-on-surface: #fdfcf8;          /* Light color for high contrast on deeper surface */
-  --color-on-surface-variant: #f2dadc;  /* Soft light color for contrast on deeper surface */
-  --color-inverse-surface: #f2f0f0;
-  --color-inverse-on-surface: #303031;
-  --color-outline: #f3aeb7;
-  --color-outline-variant: #e88a97;
-  --color-surface-tint: #ffe088;
+  --color-surface-dim: #eb4d65;         /* Lightened to 63% lightness */
+  --color-surface-bright: #f38896;      /* Lightened to 76% lightness */
+  --color-surface-container-lowest: #f03953; /* Lightened to 58% lightness */
+  --color-surface-container-low: #f4909f;    /* Lightened to 71% lightness */
+  --color-surface-container: #f4abb5;
+  --color-surface-container-high: #f7bec6;   /* Lightened to 80% lightness */
+  --color-surface-container-highest: #f9d5db;/* Lightened to 85% lightness */
+  --color-on-surface: #2d040a;          /* Dark color for high contrast on lighter surface */
+  --color-on-surface-variant: #57101a;  /* Dark color for contrast on lighter surface */
+  --color-inverse-surface: #303031;
+  --color-inverse-on-surface: #f2f0f0;
+  --color-outline: #a12134;             /* Darker outline since background is light */
+  --color-outline-variant: #821524;
+  --color-surface-tint: #d599b4;        /* Mauve tint */
   
   --color-primary: var(--primary-gold);
-  --color-on-primary: #000000;
-  --color-primary-container: #ffe088;
-  --color-on-primary-container: #241a00;
-  --color-inverse-primary: #e9c349;
+  --color-on-primary: #ffffff;          /* White text for contrast on mauve buttons */
+  --color-primary-container: #f7e8ee;   /* Light mauve container */
+  --color-on-primary-container: #401222;/* Dark text on light mauve */
+  --color-inverse-primary: #d599b4;
   
   --color-secondary: var(--secondary-emerald);
   --color-on-secondary: #ffffff;
@@ -89,14 +89,14 @@
   --color-tertiary-container: #e3e2df;
   --color-on-tertiary-container: #1b1c1a;
   
-  --color-error: #ffb4ab;
-  --color-on-error: #690005;
-  --color-error-container: #93000a;
-  --color-on-error-container: #ffdad6;
+  --color-error: #ba1a1a;               /* Darker red error color for readability on light */
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #410002;
   
   --color-background: var(--surface-burgundy);
-  --color-on-background: #fdfcf8;       /* Light color for high contrast on deeper background */
-  --color-surface-variant: #8d2530;     /* Deepened by 30% absolute (HSL L: 65% -> 35%) */
+  --color-on-background: #2d040a;       /* Dark color for high contrast on lighter background */
+  --color-surface-variant: #e86473;     /* Lightened to 65% lightness */
 
   /* Typography */
   --font-display: 'Sinistre', 'Bodoni Moda', serif;

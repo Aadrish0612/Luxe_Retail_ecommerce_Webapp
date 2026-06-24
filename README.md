@@ -51,12 +51,15 @@ Here you can showcase the elegant user interface of Luxe Liquid. Replace the pla
 
 ## Features
 
-- **Local MongoDB database & Node/Express API**: Connects to the local `productslog` database, serving product search results and detailed views.
+- **Local MongoDB database & Node/Express API**: Connects to the local `productslog` database (for product catalogs) and `login` database (for authentication).
+- **JWT-Based Role Authentication**: Features a luxury glassmorphic login gate to toggle access between User Access (Store Members) and Admin Portal. Verification is done securely using JSON Web Tokens (JWT) and `bcryptjs` password hashing.
+- **Role-Based Access Control (RBAC)**: Exposes advanced admin capabilities (like the Restock Simulator panel) exclusively to logged-in Admins, while standard Users see only the basic catalog browsing, searching, and checkout views.
+- **Session Persistence & Logout**: Stores tokens in browser `localStorage` to keep users logged in across page reloads. An interactive Logout button clears session tokens and returns the interface to the login wall.
 - **Debounced Auto-Suggestion**: Searches the database with a 400ms debounce to limit API server queries.
 - **Product Details Pages**: Clicking on any product navigates to a dedicated specifications page displaying all fields (description, dimensions, weight, shipping, warranty, returns, and reviews) while omitting `sku`, `id`, `stock`, `meta`, and `thumbnail`.
 - **Checkout & Stock Reduction**: Processes shopping cart checkout by decrementing database stocks directly using MongoDB query operators.
 - **Out-of-Stock Disabling**: Toggles `availabilityStatus` to `'Out of Stock'` automatically when stock reaches `0`, styling the "Add to Bag" buttons to be greyed out and unclickable.
-- **Restock Simulation Control**: Toggles the restock simulator directly on detail pages, allowing immediate addition of user-defined stock which toggles the item status back to `'In Stock'` and reenables the buttons.
+- **Restock Simulation Control**: Toggles the restock simulator directly on detail pages (for Admins), allowing immediate addition of user-defined stock which toggles the item status back to `'In Stock'` and reenables the buttons.
 - **Glassmorphic Navigation Bar**: Implements a sticky nav with background blur (`backdrop-filter`) and gold hover effects.
 - **Collection Tabs**: Categorizes product catalog items dynamically into **Tech**, **Makeup**, and **Groceries** views.
 - **Sliding Shopping Bag Drawer**: Sliding drawer to add, update quantity, remove items, and calculate the total price in real time.
@@ -69,7 +72,8 @@ Here you can showcase the elegant user interface of Luxe Liquid. Replace the pla
 
 - **Frontend**: React 19 + Vite 8 (with React Compiler enabled for optimal rendering performance)
 - **Backend API**: Node.js + Express.js (Port `5000`)
-- **Database**: MongoDB (Local instance `mongodb://127.0.0.1:27017/productslog`)
+- **Authentication**: JSON Web Tokens (JWT) + `bcryptjs` encryption
+- **Database**: MongoDB (Local instance `mongodb://127.0.0.1:27017` with connections to `productslog` and `login` databases)
 - **Styling**: Vanilla CSS (variables, glassmorphic styles, custom utility classes)
 
 ---
@@ -85,7 +89,10 @@ cd Auto-suggestion-search
 ```
 
 ### 2. Configure MongoDB
-Ensure MongoDB is running locally on port `27017` with a database named `productslog` and a collection named `products`.
+Ensure MongoDB is running locally on port `27017` with a database named `productslog` containing a `products` collection.
+The application also connects to a `login` database. Upon first run, the backend server will automatically create the `login` database and seed it with two test accounts if they are not already present:
+- **User**: `user@luxe.com` / `user123`
+- **Admin**: `admin@luxe.com` / `admin123`
 
 ### 3. Run Backend API Server
 Install backend dependencies and run the server:
