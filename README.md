@@ -51,7 +51,12 @@ Here you can showcase the elegant user interface of Luxe Liquid. Replace the pla
 
 ## Features
 
-- **Debounced Auto-Suggestion**: Searches the `dummyjson.com` product API with a 400ms debounce to limit network requests.
+- **Local MongoDB database & Node/Express API**: Connects to the local `productslog` database, serving product search results and detailed views.
+- **Debounced Auto-Suggestion**: Searches the database with a 400ms debounce to limit API server queries.
+- **Product Details Pages**: Clicking on any product navigates to a dedicated specifications page displaying all fields (description, dimensions, weight, shipping, warranty, returns, and reviews) while omitting `sku`, `id`, `stock`, `meta`, and `thumbnail`.
+- **Checkout & Stock Reduction**: Processes shopping cart checkout by decrementing database stocks directly using MongoDB query operators.
+- **Out-of-Stock Disabling**: Toggles `availabilityStatus` to `'Out of Stock'` automatically when stock reaches `0`, styling the "Add to Bag" buttons to be greyed out and unclickable.
+- **Restock Simulation Control**: Toggles the restock simulator directly on detail pages, allowing immediate addition of user-defined stock which toggles the item status back to `'In Stock'` and reenables the buttons.
 - **Glassmorphic Navigation Bar**: Implements a sticky nav with background blur (`backdrop-filter`) and gold hover effects.
 - **Collection Tabs**: Categorizes product catalog items dynamically into **Tech**, **Makeup**, and **Groceries** views.
 - **Sliding Shopping Bag Drawer**: Sliding drawer to add, update quantity, remove items, and calculate the total price in real time.
@@ -62,9 +67,10 @@ Here you can showcase the elegant user interface of Luxe Liquid. Replace the pla
 
 ## Tech Stack
 
-- **Framework**: React 19 + Vite 8 (with React Compiler enabled for optimal rendering performance)
+- **Frontend**: React 19 + Vite 8 (with React Compiler enabled for optimal rendering performance)
+- **Backend API**: Node.js + Express.js (Port `5000`)
+- **Database**: MongoDB (Local instance `mongodb://127.0.0.1:27017/productslog`)
 - **Styling**: Vanilla CSS (variables, glassmorphic styles, custom utility classes)
-- **Data Source**: [DummyJSON API](https://dummyjson.com)
 
 ---
 
@@ -78,18 +84,25 @@ git clone https://github.com/yourusername/Auto-suggestion-search.git
 cd Auto-suggestion-search
 ```
 
-### 2. Install Dependencies
+### 2. Configure MongoDB
+Ensure MongoDB is running locally on port `27017` with a database named `productslog` and a collection named `products`.
+
+### 3. Run Backend API Server
+Install backend dependencies and run the server:
+```bash
+npm run server
+```
+The backend server will run at `http://localhost:5000`.
+
+### 4. Run Frontend App
+In a separate terminal window, install frontend dependencies and start the dev server:
 ```bash
 npm install
-```
-
-### 3. Run Development Server
-```bash
 npm run dev
 ```
 The application will be running at `http://localhost:5173`.
 
-### 4. Build for Production
+### 5. Build for Production
 ```bash
 npm run build
 ```
@@ -100,10 +113,13 @@ npm run build
 
 ```
 Auto-suggestion-search/
+├── backend/
+│   ├── package.json            # Backend dependency setup
+│   └── server.js               # Node/Express server connecting to MongoDB
 ├── src/
 │   ├── components/
-│   │   └── AutoSuggestion.jsx  # Main search & store page component
-│   ├── assets/                 # Local assets and icons
+│   │   └── AutoSuggestion.jsx  # Main search & details page component
+│   ├── assets/                 # Local assets, screenshots, and fonts
 │   ├── App.jsx                 # App root component
 │   ├── App.css                 # Page layout & drawer css styles
 │   ├── index.css               # Design tokens, variables & base css
