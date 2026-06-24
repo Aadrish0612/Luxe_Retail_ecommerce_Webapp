@@ -2,6 +2,9 @@
 
 An elegant, high-end e-commerce interface with an advanced, debounced **Auto-Suggestion Search** system. Designed with a luxury visual identity ("Luxe Liquid") featuring ambient glow filters, liquid glassmorphism, responsive grids, and an interactive shopping bag checkout experience.
 
+*This project was actively vibecoded using Google Antigravity and Google Stitch for design of UI.*
+
+
 ---
 
 ## Visual Previews
