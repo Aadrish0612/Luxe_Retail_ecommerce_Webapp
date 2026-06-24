@@ -73,6 +73,7 @@ desktop.ini
 *.sw?
 *.bak
 *.tmp
+scratch/
 
 # Cache folders
 .vite/
@@ -86,3 +87,4 @@ desktop.ini
 coverage/
 *.lcov
 
+import.js

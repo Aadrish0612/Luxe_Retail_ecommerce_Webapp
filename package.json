@@ -7,9 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node backend/server.js"
   },
   "dependencies": {
+    "mongodb": "^7.3.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },
@@ -26,5 +28,18 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
     "vite": "^8.0.12"
-  }
+  },
+  "description": "An elegant, high-end e-commerce interface with an advanced, debounced **Auto-Suggestion Search** system. Designed with a luxury visual identity (\"Luxe Liquid\") featuring ambient glow filters, liquid glassmorphism, responsive grids, and an interactive shopping bag checkout experience.",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aadrish0612/Luxe_Retail_ecommerce_Webapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Aadrish0612/Luxe_Retail_ecommerce_Webapp/issues"
+  },
+  "homepage": "https://github.com/Aadrish0612/Luxe_Retail_ecommerce_Webapp#readme"
 }

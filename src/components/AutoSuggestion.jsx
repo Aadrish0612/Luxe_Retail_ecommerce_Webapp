@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 async function fetchProducts(query) {
     const url = query.trim().length > 0 
-        ? `https://dummyjson.com/products/search?q=${query}`
-        : 'https://dummyjson.com/products?limit=9';
+        ? `http://localhost:5000/api/products?q=${query}`
+        : 'http://localhost:5000/api/products';
     const res = await fetch(url);
     const data = await res.json();
     return data;
@@ -16,7 +16,7 @@ const AutoSuggestion = () => {
     const [loading, setLoading] = useState(false);
     const [isDropdownActive, setIsDropdownActive] = useState(false);
     
-    // Page View Navigation ('store' | 'collections' | 'editorial' | 'bespoke')
+    // Page View Navigation ('store' | 'collections' | 'editorial' | 'bespoke' | 'product-detail')
     const [view, setView] = useState("store");
     
     // Collections Tabs ('tech' | 'makeup' | 'groceries')
@@ -27,6 +27,17 @@ const AutoSuggestion = () => {
     // Shopping Bag States
     const [bagItems, setBagItems] = useState([]);
     const [isBagOpen, setIsBagOpen] = useState(false);
+    
+    // Detailed Product States
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+    const navigateToProduct = (product) => {
+        setSelectedProduct(product);
+        setActiveImageIndex(0);
+        setView('product-detail');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
     
     const timerIdRef = useRef();
     const dropdownRef = useRef();
@@ -77,7 +88,7 @@ const AutoSuggestion = () => {
                         categoryEndpoint = 'groceries';
                     }
                     
-                    const res = await fetch(`https://dummyjson.com/products/category/${categoryEndpoint}`);
+                    const res = await fetch(`http://localhost:5000/api/products/category/${categoryEndpoint}`);
                     const data = await res.json();
                     setCollectionProducts(data.products || []);
                 } catch (error) {
@@ -170,6 +181,39 @@ const AutoSuggestion = () => {
     const calculateTotal = () => {
         const total = bagItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
         return total.toFixed(2);
+    };
+
+    const handleCheckout = async () => {
+        try {
+            const checkoutItems = bagItems.map(item => ({
+                id: item.id,
+                quantity: item.quantity
+            }));
+            
+            const res = await fetch('http://localhost:5000/api/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ items: checkoutItems })
+            });
+            const data = await res.json();
+            
+            if (res.ok && data.success) {
+                alert(`Checkout successful! Total: $${calculateTotal()}`);
+                setBagItems([]);
+                setIsBagOpen(false);
+                
+                // Refresh list to pull updated stock values from local database
+                const refreshed = await fetchProducts(inputValue || query || "");
+                setResults(refreshed.products || []);
+            } else {
+                alert(`Checkout failed: ${data.error || 'Unknown error'}`);
+            }
+        } catch (err) {
+            console.error('Error during checkout:', err);
+            alert('Checkout failed due to network error.');
+        }
     };
 
     const totalBagQty = bagItems.reduce((acc, item) => acc + item.quantity, 0);
@@ -333,7 +377,7 @@ const AutoSuggestion = () => {
                                 {results.map((product) => {
                                     const tag = selectTagType(product.price, product.rating);
                                     return (
-                                        <div key={product.id} className="product-card">
+                                        <div key={product.id} className="product-card" onClick={() => navigateToProduct(product)}>
                                             <div className="product-image-container">
                                                 <span className={`text-label-sm card-tag ${tag.className}`}>
                                                     {tag.label}
@@ -352,12 +396,14 @@ const AutoSuggestion = () => {
                                                     <span className="product-card-price">${product.price}</span>
                                                     <button 
                                                         className="btn-primary"
+                                                        disabled={product.stock === 0 || product.availabilityStatus === 'Out of Stock'}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             addToBag(product);
                                                         }}
+                                                        style={(product.stock === 0 || product.availabilityStatus === 'Out of Stock') ? { opacity: 0.5, cursor: 'not-allowed', background: '#444', color: '#888', boxShadow: 'none' } : {}}
                                                     >
-                                                        Add to Bag
+                                                        {product.stock === 0 || product.availabilityStatus === 'Out of Stock' ? 'Out of Stock' : 'Add to Bag'}
                                                     </button>
                                                 </div>
                                             </div>
@@ -436,7 +482,7 @@ const AutoSuggestion = () => {
                                 {displayedCollectionProducts.map((product) => {
                                     const tag = selectTagType(product.price, product.rating);
                                     return (
-                                        <div key={product.id} className="product-card">
+                                        <div key={product.id} className="product-card" onClick={() => navigateToProduct(product)}>
                                             <div className="product-image-container">
                                                 <span className={`text-label-sm card-tag ${tag.className}`}>
                                                     {tag.label}
@@ -455,12 +501,14 @@ const AutoSuggestion = () => {
                                                     <span className="product-card-price">${product.price}</span>
                                                     <button 
                                                         className="btn-primary"
+                                                        disabled={product.stock === 0 || product.availabilityStatus === 'Out of Stock'}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             addToBag(product);
                                                         }}
+                                                        style={(product.stock === 0 || product.availabilityStatus === 'Out of Stock') ? { opacity: 0.5, cursor: 'not-allowed', background: '#444', color: '#888', boxShadow: 'none' } : {}}
                                                     >
-                                                        Add to Bag
+                                                        {product.stock === 0 || product.availabilityStatus === 'Out of Stock' ? 'Out of Stock' : 'Add to Bag'}
                                                     </button>
                                                 </div>
                                             </div>
@@ -561,6 +609,244 @@ const AutoSuggestion = () => {
                 </div>
             )}
 
+            {/* PRODUCT DETAILS VIEW */}
+            {view === 'product-detail' && selectedProduct && (
+                <div className="product-detail-container">
+                    <div className="back-btn-wrapper">
+                        <button className="btn-back" onClick={() => setView('store')}>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg>
+                            <span>Back to Store</span>
+                        </button>
+                    </div>
+
+                    <div className="product-detail-grid">
+                        {/* Gallery Section */}
+                        <div className="product-detail-gallery">
+                            {selectedProduct.images && selectedProduct.images.length > 0 ? (
+                                <div className="gallery-main-wrapper">
+                                    <img 
+                                        src={selectedProduct.images[activeImageIndex] || selectedProduct.images[0]} 
+                                        alt={selectedProduct.title} 
+                                        className="gallery-main-img" 
+                                    />
+                                    {selectedProduct.images.length > 1 && (
+                                        <div className="gallery-thumbnails">
+                                            {selectedProduct.images.map((img, idx) => (
+                                                <img 
+                                                    key={idx} 
+                                                    src={img} 
+                                                    alt={`${selectedProduct.title} view ${idx + 1}`} 
+                                                    className={`gallery-thumb ${activeImageIndex === idx ? 'active' : ''}`}
+                                                    onClick={() => setActiveImageIndex(idx)}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="gallery-main-placeholder">No Image Available</div>
+                            )}
+                        </div>
+
+                        {/* Info Section */}
+                        <div className="product-detail-info">
+                            <span className="text-label-sm detail-category">{selectedProduct.category}</span>
+                            <h1 className="text-headline-lg detail-title">{selectedProduct.title}</h1>
+                            {selectedProduct.brand && (
+                                <span className="text-body-md detail-brand">by {selectedProduct.brand}</span>
+                            )}
+
+                            {/* Rating & Reviews Count */}
+                            <div className="detail-rating-row">
+                                <div className="rating-stars">
+                                    {"★".repeat(Math.round(selectedProduct.rating))}
+                                    {"☆".repeat(5 - Math.round(selectedProduct.rating))}
+                                    <span className="rating-score"> {selectedProduct.rating}</span>
+                                </div>
+                                <span className="rating-reviews-count">({selectedProduct.reviews ? selectedProduct.reviews.length : 0} reviews)</span>
+                            </div>
+
+                            <hr className="detail-divider" />
+
+                            {/* Price and Add to Bag */}
+                            <div className="detail-price-row">
+                                <div className="detail-price-block">
+                                    <span className="detail-price">${selectedProduct.price}</span>
+                                    {selectedProduct.discountPercentage > 0 && (
+                                        <div className="detail-discount-block">
+                                            <span className="detail-discount-pct">{selectedProduct.discountPercentage}% OFF</span>
+                                            <span className="detail-original-price">
+                                                ${(selectedProduct.price / (1 - selectedProduct.discountPercentage / 100)).toFixed(2)}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                                
+                                <button 
+                                    className="btn-primary detail-add-btn" 
+                                    disabled={selectedProduct.stock === 0 || selectedProduct.availabilityStatus === 'Out of Stock'}
+                                    onClick={() => addToBag(selectedProduct)}
+                                    style={(selectedProduct.stock === 0 || selectedProduct.availabilityStatus === 'Out of Stock') ? { opacity: 0.5, cursor: 'not-allowed', background: '#444', color: '#888', boxShadow: 'none' } : {}}
+                                >
+                                    {selectedProduct.stock === 0 || selectedProduct.availabilityStatus === 'Out of Stock' ? 'Out of Stock' : 'Add to Bag'}
+                                </button>
+                            </div>
+
+                            <hr className="detail-divider" />
+
+                            {/* Description */}
+                            <div className="detail-section">
+                                <h3 className="text-label-md detail-section-title">Description</h3>
+                                <p className="text-body-md detail-description">{selectedProduct.description}</p>
+                            </div>
+
+                            {/* Logistics (Shipping / Warranty / Returns) */}
+                            <div className="detail-section logistics-grid">
+                                {selectedProduct.shippingInformation && (
+                                    <div className="logistics-item">
+                                        <span className="text-label-sm label-dim">Shipping</span>
+                                        <span className="text-body-md">{selectedProduct.shippingInformation}</span>
+                                    </div>
+                                )}
+                                {selectedProduct.warrantyInformation && (
+                                    <div className="logistics-item">
+                                        <span className="text-label-sm label-dim">Warranty</span>
+                                        <span className="text-body-md">{selectedProduct.warrantyInformation}</span>
+                                    </div>
+                                )}
+                                {selectedProduct.returnPolicy && (
+                                    <div className="logistics-item">
+                                        <span className="text-label-sm label-dim">Returns</span>
+                                        <span className="text-body-md">{selectedProduct.returnPolicy}</span>
+                                    </div>
+                                )}
+                                {selectedProduct.minimumOrderQuantity && (
+                                    <div className="logistics-item">
+                                        <span className="text-label-sm label-dim">Min. Order</span>
+                                        <span className="text-body-md">{selectedProduct.minimumOrderQuantity} units</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Physical Specifications (Dimensions & Weight) */}
+                            {(selectedProduct.dimensions || selectedProduct.weight) && (
+                                <div className="detail-section specs-section">
+                                    <h3 className="text-label-md detail-section-title">Specifications</h3>
+                                    <div className="specs-grid">
+                                        {selectedProduct.weight && (
+                                            <div className="specs-item">
+                                                <span className="text-body-md label-dim">Weight:</span>
+                                                <span className="text-body-md">{selectedProduct.weight} kg</span>
+                                            </div>
+                                        )}
+                                        {selectedProduct.dimensions && (
+                                            <div className="specs-item">
+                                                <span className="text-body-md label-dim">Dimensions:</span>
+                                                <span className="text-body-md">
+                                                    {selectedProduct.dimensions.width}w × {selectedProduct.dimensions.height}h × {selectedProduct.dimensions.depth}d cm
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Tags */}
+                            {selectedProduct.tags && selectedProduct.tags.length > 0 && (
+                                <div className="detail-section tags-section">
+                                    <div className="detail-tags">
+                                        {selectedProduct.tags.map((tag, idx) => (
+                                            <span key={idx} className="detail-tag">#{tag}</span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Restock Simulator */}
+                            <div className="detail-section restock-simulator">
+                                <h3 className="text-label-md detail-section-title">Simulator: Restock Item</h3>
+                                <div className="restock-input-row">
+                                    <input 
+                                        type="number" 
+                                        min="1" 
+                                        placeholder="Qty" 
+                                        id="restock-qty-input"
+                                        className="restock-input"
+                                        defaultValue="10"
+                                    />
+                                    <button 
+                                        className="btn-primary btn-restock"
+                                        onClick={async () => {
+                                            const qtyInput = document.getElementById('restock-qty-input');
+                                            const qty = Number(qtyInput.value);
+                                            if (isNaN(qty) || qty <= 0) return alert("Please enter a valid quantity.");
+                                            
+                                            try {
+                                                const res = await fetch(`http://localhost:5000/api/products/${selectedProduct.id}/restock`, {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json'
+                                                    },
+                                                    body: JSON.stringify({ quantity: qty })
+                                                });
+                                                const data = await res.json();
+                                                
+                                                if (res.ok && data.success) {
+                                                    alert(`Restocked successfully! New Stock: ${data.newStock}`);
+                                                    
+                                                    // Update selectedProduct local state
+                                                    setSelectedProduct(prev => ({
+                                                        ...prev,
+                                                        stock: data.newStock,
+                                                        availabilityStatus: data.availabilityStatus
+                                                    }));
+                                                    
+                                                    // Refresh the catalog list
+                                                    const refreshed = await fetchProducts(inputValue || query || "");
+                                                    setResults(refreshed.products || []);
+                                                } else {
+                                                    alert(`Restock failed: ${data.error}`);
+                                                }
+                                            } catch (err) {
+                                                console.error("Restock request failed:", err);
+                                                alert("Network error while trying to restock.");
+                                            }
+                                        }}
+                                    >
+                                        Restock
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Reviews Section */}
+                    {selectedProduct.reviews && selectedProduct.reviews.length > 0 && (
+                        <div className="detail-reviews-container">
+                            <h2 className="text-headline-md reviews-title">Customer Reviews</h2>
+                            <div className="reviews-list">
+                                {selectedProduct.reviews.map((rev, idx) => (
+                                    <div key={idx} className="review-card">
+                                        <div className="review-header">
+                                            <span className="reviewer-name">{rev.reviewerName}</span>
+                                            <span className="review-date">{new Date(rev.date).toLocaleDateString()}</span>
+                                        </div>
+                                        <div className="review-rating">
+                                            {"★".repeat(rev.rating)}
+                                            {"☆".repeat(5 - rev.rating)}
+                                        </div>
+                                        <p className="reviewer-comment">"{rev.comment}"</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
+
             {/* Shopping Bag Sliding Drawer Overlay */}
             <div 
                 className={`bag-drawer-overlay ${isBagOpen ? 'active' : ''}`} 
@@ -626,7 +912,7 @@ const AutoSuggestion = () => {
                         </div>
                         <button 
                             className="btn-primary btn-checkout" 
-                            onClick={() => alert(`Proceeding to checkout for $${calculateTotal()}`)}
+                            onClick={handleCheckout}
                         >
                             Proceed to Checkout
                         </button>
